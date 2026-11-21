@@ -30,10 +30,6 @@ export interface Profile {
   sub: string;
   status: string; // what you're doing now, shown with a live dot
   intro: string; // one line under the name in the sidebar
-  basedIn: string;
-  background: string;
-  education: string;
-  languages: string[];
   email: string;
   photo: string; // path under /public
   links: Link[];
@@ -94,11 +90,6 @@ export interface Video {
   caption: string;
 }
 
-export interface SkillGroup {
-  name: string;
-  items: string[];
-}
-
 export interface SiteContent {
   url: string;
   profile: Profile;
@@ -106,7 +97,6 @@ export interface SiteContent {
   projects: Project[];
   videos: Video[];
   youtubeChannel?: string;
-  skills: SkillGroup[];
   footer: string;
 }
 
@@ -128,10 +118,6 @@ export const site: SiteContent = {
     sub: "Founder and sole engineer of TapVoice and JobMatchApply, both launched on Product Hunt. Behind them: nearly 13 years building backend and data systems for banks and financial firms.",
     status: "Building my own startup",
     intro: "I ship AI products alone, with the engineering discipline of 13 years in banking.",
-    basedIn: "Mumbai, India",
-    background: "Nearly 13 years building backend, data and identity systems in banking and finance",
-    education: "Master in Information Technology, University of Mumbai",
-    languages: ["English (fluent)", "Hindi (native)"],
     email: "murdhariya.kamlesh3@gmail.com",
     photo: "/me.jpg",
     links: [
@@ -475,80 +461,6 @@ export const site: SiteContent = {
   // TODO_YT_CHANNEL: add your YouTube channel URL here.
   youtubeChannel: undefined,
 
-  skills: [
-    {
-      name: "Languages",
-      items: ["Java (12+ yrs)", "SQL", "Scala", "Python", "TypeScript", "Shell", "Rust"],
-    },
-    {
-      name: "Backend",
-      items: [
-        "Spring Boot",
-        "Spring",
-        "Hibernate/JPA",
-        "REST & SOAP",
-        "Microservices",
-        "Distributed systems",
-        "System design",
-      ],
-    },
-    { name: "Identity & access", items: ["SSO", "Authentication & authorization tooling"] },
-    {
-      name: "Data engineering",
-      items: [
-        "Spark (batch + Structured Streaming)",
-        "Kafka",
-        "Hadoop/HDFS",
-        "Hive",
-        "Sqoop",
-        "Airflow",
-        "dbt",
-        "ETL/ELT",
-        "Data modelling",
-        "Governance",
-      ],
-    },
-    {
-      name: "Cloud & DevOps",
-      items: [
-        "AWS (S3, EMR, Glue)",
-        "Docker",
-        "Kubernetes",
-        "Helm",
-        "Terraform",
-        "Jenkins",
-        "GitHub Actions",
-        "Bamboo",
-      ],
-    },
-    { name: "Databases", items: ["PostgreSQL", "Oracle", "MySQL", "Hive", "Supabase"] },
-    {
-      name: "AI / LLM",
-      items: [
-        "Claude & OpenAI APIs",
-        "Structured outputs",
-        "Prompt caching",
-        "LLM cost controls",
-        "Prompt-injection safeguards",
-        "Whisper",
-      ],
-    },
-    { name: "Observability", items: ["Grafana", "Splunk", "Control-M", "SonarQube"] },
-    {
-      name: "Product stack",
-      items: [
-        "Next.js",
-        "React",
-        "Tailwind",
-        "Tauri",
-        "Vercel",
-        "Razorpay",
-        "Dodo Payments",
-        "Playwright",
-      ],
-    },
-  ],
-
   footer: "Built with Next.js + Claude Code · Mumbai",
 };
 
@@ -574,7 +486,6 @@ export const ui = {
     principles: "How I build",
     story: "Story",
     demos: "Demos",
-    skills: "Stack",
     contact: "Contact",
   },
   contactTitle: "Building something? Let's talk.",
@@ -582,10 +493,6 @@ export const ui = {
   filterAll: "All",
   filterLabel: "Filter projects by tag",
   playVideo: "Play video",
-  basedIn: "Based in",
-  background: "Background",
-  education: "Education",
-  languages: "Languages",
   demoVideos: "Demo videos",
   youtubeChannel: "YouTube channel",
   role: "Role",

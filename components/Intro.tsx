@@ -75,27 +75,13 @@ export function Principles() {
 
 export function Story() {
   const { profile } = site;
-  const facts = [
-    { label: ui.basedIn, value: profile.basedIn },
-    { label: ui.background, value: profile.background },
-    { label: ui.education, value: profile.education },
-    { label: ui.languages, value: profile.languages.join(" · ") },
-  ];
   return (
     <Section id="story" title={ui.sections.story}>
-      <div className="reveal space-y-5 text-lg leading-relaxed text-pretty">
+      <div className="reveal max-w-3xl space-y-5 text-lg leading-relaxed text-pretty">
         {profile.story.map((p) => (
           <p key={p.slice(0, 32)}>{p}</p>
         ))}
       </div>
-      <dl className="mt-10 grid gap-x-8 gap-y-5 border-t border-line pt-8 sm:grid-cols-2">
-        {facts.map((f) => (
-          <div key={f.label}>
-            <dt className="font-mono text-xs tracking-wider text-muted uppercase">{f.label}</dt>
-            <dd className="mt-1.5">{f.value}</dd>
-          </div>
-        ))}
-      </dl>
     </Section>
   );
 }

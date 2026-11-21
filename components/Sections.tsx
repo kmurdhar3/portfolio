@@ -81,35 +81,6 @@ export function Demos() {
   );
 }
 
-export function Skills() {
-  return (
-    <Section id="skills" title={ui.sections.skills}>
-      <dl className="grid gap-x-10 gap-y-7 sm:grid-cols-2">
-        {site.skills.map((g, i) => (
-          <div key={g.name} style={hueStyle(hues[i % hues.length])}>
-            <dt className="flex items-center gap-2 text-sm font-semibold">
-              <span className="h-2 w-2 rounded-full bg-[var(--c)]" aria-hidden="true" />
-              {g.name}
-            </dt>
-            <dd className="mt-2.5">
-              <ul className="flex flex-wrap gap-1.5">
-                {g.items.map((s) => (
-                  <li
-                    key={s}
-                    className="rounded-md border border-[color-mix(in_oklab,var(--c)_30%,var(--border))] bg-[color-mix(in_oklab,var(--c)_7%,var(--surface))] px-2.5 py-1 text-[13px]"
-                  >
-                    {s}
-                  </li>
-                ))}
-              </ul>
-            </dd>
-          </div>
-        ))}
-      </dl>
-    </Section>
-  );
-}
-
 export function Contact() {
   const { profile } = site;
   const email = profile.links.find((l) => l.kind === "email");

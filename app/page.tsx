@@ -2,7 +2,7 @@ import { cacheLife } from "next/cache";
 import { site, ui } from "@/content/site";
 import { Glance, Intro, Principles, Story } from "@/components/Intro";
 import { Nav } from "@/components/Nav";
-import { Contact, Demos, Footer, Products, Skills } from "@/components/Sections";
+import { Contact, Demos, Footer, Products } from "@/components/Sections";
 import { Sidebar } from "@/components/Sidebar";
 import { Spotlight } from "@/components/Spotlight";
 
@@ -17,10 +17,7 @@ function personJsonLd() {
     jobTitle: "Founder-engineer",
     description: profile.sub,
     address: { "@type": "PostalAddress", addressLocality: "Mumbai", addressCountry: "IN" },
-    alumniOf: { "@type": "CollegeOrUniversity", name: "University of Mumbai" },
     email: `mailto:${profile.email}`,
-    knowsLanguage: ["en", "hi"],
-    knowsAbout: site.skills.flatMap((g) => g.items).slice(0, 30),
     sameAs: profile.links.filter((l) => /^https?:/.test(l.href)).map((l) => l.href),
   };
 }
@@ -60,7 +57,6 @@ export default async function Home() {
           <Principles />
           <Story />
           <Demos />
-          <Skills />
           <Contact />
           <Footer year={year} />
         </main>

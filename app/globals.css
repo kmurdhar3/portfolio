@@ -250,3 +250,6 @@ body {
     animation: none;
   }
 }
+
+/* `short:` variant for short laptop screens, so the sticky sidebar still fits. */
+@custom-variant short (@media (max-height: 820px));

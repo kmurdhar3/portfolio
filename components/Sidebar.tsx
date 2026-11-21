@@ -14,19 +14,19 @@ export function Sidebar() {
   const socials = profile.links.filter((l) => l.kind !== "email");
 
   return (
-    <div id="top" className="pt-10 pb-6 lg:sticky lg:top-0 lg:flex lg:h-dvh lg:flex-col lg:justify-between lg:py-16">
+    <div id="top" className="pt-10 pb-6 lg:sticky lg:top-0 lg:flex lg:h-dvh lg:flex-col lg:justify-between lg:py-12 short:lg:py-7">
       <div>
-        <div className="flex items-center gap-4">
+        <div className="flex flex-col items-start gap-4">
           {/* Multicolour ring around the photo. */}
-          <span className="rainbow rounded-[20px] p-[3px]">
+          <span className="rainbow rounded-[26px] p-[3px]">
           <Image
             src={profile.photo}
             alt={`Portrait of ${profile.name}`}
             width={720}
             height={720}
             preload
-            sizes="88px"
-            className="block h-[88px] w-[88px] rounded-[17px] bg-bg object-cover"
+            sizes="128px"
+            className="block h-32 w-32 rounded-[23px] bg-bg object-cover"
           />
           </span>
           <p className="inline-flex items-center gap-2 rounded-full border border-line bg-surface/80 px-3 py-1 font-mono text-[11px] text-muted">
@@ -35,7 +35,7 @@ export function Sidebar() {
           </p>
         </div>
 
-        <p className="mt-6 text-4xl font-semibold tracking-tight sm:text-5xl">{profile.name}</p>
+        <p className="mt-6 text-4xl font-semibold tracking-tight sm:text-5xl short:lg:mt-4 short:lg:text-4xl">{profile.name}</p>
         <p className="mt-2 font-mono text-xs tracking-[0.16em] text-accent uppercase">{profile.role}</p>
         <p className="mt-4 max-w-xs leading-relaxed text-muted">{profile.intro}</p>
 
@@ -57,7 +57,7 @@ export function Sidebar() {
           </a>
         </div>
 
-        <div className="mt-14 hidden lg:block">
+        <div className="mt-10 hidden lg:block short:mt-6">
           <ActiveNav items={nav} label={ui.navLabel} />
         </div>
       </div>

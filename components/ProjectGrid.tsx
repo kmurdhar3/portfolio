@@ -2,7 +2,7 @@
 
 import { useState, type ReactNode } from "react";
 import type { Project, ProjectTag } from "@/content/site";
-import { Chip, ExternalLink, StatusBadge } from "./ui";
+import { Chip, ExternalLink, StatusBadge, hueStyle } from "./ui";
 
 const TAGS: ProjectTag[] = ["Live", "AI", "Data", "Tools", "Open source"];
 
@@ -30,8 +30,12 @@ export function ProjectGrid({
     ...TAGS.filter((t) => projects.some((p) => p.tags.includes(t))).map((t) => ({ value: t, label: t })),
   ];
 
+  // With only a handful of projects, filters add noise; show them once the list grows.
+  const showFilters = projects.length >= 8;
+
   return (
     <div>
+      {showFilters && (
       <div role="group" aria-label={filterLabel} className="mb-8 flex flex-wrap gap-2">
         {filters.map((f) => {
           const pressed = active === f.value;
@@ -53,13 +57,18 @@ export function ProjectGrid({
           );
         })}
       </div>
+      )}
       <p className="sr-only" aria-live="polite">
         {visible.length} projects shown
       </p>
-      <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <ul className="grid gap-5 sm:grid-cols-2 2xl:grid-cols-3">
         {visible.map((p) => (
           <li key={p.slug} className="flex">
-            <article className="flex w-full flex-col overflow-hidden rounded-xl border border-line bg-surface transition-colors hover:border-accent/50">
+            <article
+              style={hueStyle(p.color)}
+              className="card tint reveal flex w-full flex-col overflow-hidden rounded-2xl"
+            >
+              <div className="h-1 bg-[var(--c)]" aria-hidden="true" />
               {images[p.slug]}
               <div className="flex flex-1 flex-col p-5">
                 <div className="flex flex-wrap gap-1.5">
@@ -67,7 +76,7 @@ export function ProjectGrid({
                     <StatusBadge key={s} status={s} />
                   ))}
                 </div>
-                <h3 className="mt-3 text-lg font-semibold tracking-tight">{p.name}</h3>
+                <h3 className="mt-3 font-display text-3xl leading-tight text-[var(--c)]">{p.name}</h3>
                 <p className="mt-1.5 flex-1 text-sm leading-relaxed text-muted">{p.oneLiner}</p>
                 {p.stack.length > 0 && (
                   <ul className="mt-4 flex flex-wrap gap-1.5" aria-label={`${p.name} stack`}>

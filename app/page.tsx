@@ -1,10 +1,10 @@
 import { cacheLife } from "next/cache";
 import { site, ui } from "@/content/site";
-import { About } from "@/components/About";
-import { Hero } from "@/components/Hero";
+import { Glance, Intro, Principles, Story } from "@/components/Intro";
 import { Nav } from "@/components/Nav";
-import { Contact, Footer, Products, Projects, Skills, Videos } from "@/components/Sections";
-import { Stats } from "@/components/Stats";
+import { Contact, Demos, Footer, Products, Skills } from "@/components/Sections";
+import { Sidebar } from "@/components/Sidebar";
+import { Spotlight } from "@/components/Spotlight";
 
 function personJsonLd() {
   const { profile } = site;
@@ -14,8 +14,8 @@ function personJsonLd() {
     name: profile.name,
     url: site.url,
     image: new URL(profile.photo, site.url).toString(),
-    jobTitle: profile.eyebrow,
-    worksFor: { "@type": "Organization", name: "Crédit Agricole" },
+    jobTitle: "Founder-engineer",
+    description: profile.sub,
     address: { "@type": "PostalAddress", addressLocality: "Mumbai", addressCountry: "IN" },
     alumniOf: { "@type": "CollegeOrUniversity", name: "University of Mumbai" },
     email: `mailto:${profile.email}`,
@@ -44,18 +44,27 @@ export default async function Home() {
       >
         {ui.skipLink}
       </a>
+
+      <div className="page-backdrop" aria-hidden="true" />
+      <Spotlight />
+
+      {/* Phones and tablets: compact top bar. Large screens use the sidebar nav instead. */}
       <Nav />
-      <main id="main">
-        <Hero />
-        <Stats />
-        <About />
-        <Products />
-        <Projects />
-        <Videos />
-        <Skills />
-        <Contact />
-      </main>
-      <Footer year={year} />
+
+      <div className="mx-auto max-w-[120rem] px-4 sm:px-6 lg:grid lg:grid-cols-[minmax(0,19rem)_minmax(0,1fr)] lg:gap-10 lg:px-8 xl:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] xl:gap-14 xl:px-10">
+        <Sidebar />
+        <main id="main" className="min-w-0 lg:py-16">
+          <Intro />
+          <Glance />
+          <Products />
+          <Principles />
+          <Story />
+          <Demos />
+          <Skills />
+          <Contact />
+          <Footer year={year} />
+        </main>
+      </div>
     </>
   );
 }

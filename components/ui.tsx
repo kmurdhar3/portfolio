@@ -1,9 +1,14 @@
-import type { ReactNode } from "react";
-import type { Link, ProjectStatus } from "@/content/site";
+import type { CSSProperties, ReactNode } from "react";
+import type { Hue, Link, ProjectStatus } from "@/content/site";
 import { LinkIcon } from "./Icons";
 
 export function Container({ children, className = "" }: { children: ReactNode; className?: string }) {
-  return <div className={`mx-auto w-full max-w-6xl px-5 sm:px-8 ${className}`}>{children}</div>;
+  return <div className={`mx-auto w-full max-w-[120rem] px-4 sm:px-6 ${className}`}>{children}</div>;
+}
+
+/** Inline style that sets the card colour (--c) used by .card, .tint and hue utilities. */
+export function hueStyle(hue: Hue = "emerald"): CSSProperties {
+  return { "--c": `var(--${hue})` } as CSSProperties;
 }
 
 export function Section({
@@ -18,18 +23,17 @@ export function Section({
   className?: string;
 }) {
   const headingId = `${id}-heading`;
+  // Sections sit inside the page's right-hand column, so no container of their own.
   return (
-    <section id={id} aria-labelledby={headingId} className={`py-16 sm:py-24 ${className}`}>
-      <Container>
-        <h2
-          id={headingId}
-          className="mb-10 flex items-center gap-3 font-mono text-xs font-medium tracking-[0.18em] text-muted uppercase"
-        >
-          <span className="h-px w-8 bg-accent" aria-hidden="true" />
-          {title}
-        </h2>
-        {children}
-      </Container>
+    <section id={id} aria-labelledby={headingId} className={`scroll-mt-24 py-14 sm:py-20 ${className}`}>
+      <h2
+        id={headingId}
+        className="mb-8 flex items-center gap-3 font-mono text-xs font-medium tracking-[0.18em] text-muted uppercase"
+      >
+        <span className="rainbow h-0.5 w-10 rounded-full" aria-hidden="true" />
+        {title}
+      </h2>
+      {children}
     </section>
   );
 }
@@ -71,15 +75,16 @@ export function ExternalLink({
   className = "",
 }: {
   link: Link;
-  variant?: "primary" | "ghost" | "plain";
+  variant?: "primary" | "hue" | "ghost" | "plain";
   className?: string;
 }) {
   const isExternal = /^https?:\/\//.test(link.href);
   const styles = {
     primary:
       "bg-accent text-accent-contrast hover:bg-accent-strong border-transparent",
-    ghost: "border-line bg-surface text-fg hover:border-accent hover:text-accent",
-    plain: "border-transparent text-muted hover:text-accent px-0",
+    hue: "border-transparent bg-[var(--c)] text-accent-contrast hover:opacity-90",
+    ghost: "border-line bg-surface text-fg hover:border-[var(--c,var(--accent))] hover:text-[var(--c,var(--accent))]",
+    plain: "border-transparent text-muted hover:text-[var(--c,var(--accent))] px-0",
   }[variant];
   return (
     <a

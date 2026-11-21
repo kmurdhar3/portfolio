@@ -19,33 +19,31 @@ export interface Link {
 export interface Stat {
   value: string;
   label: string;
+  wide?: boolean; // spans two columns in the bento grid
 }
 
 export interface Profile {
   name: string;
-  eyebrow: string;
+  role: string; // short label under the name
   headline: string;
+  headlineAccent: string; // part of the headline shown in the display serif
   sub: string;
-  badgeLine: string;
-  title: string;
-  location: string;
-  lookingFor: string;
+  status: string; // what you're doing now, shown with a live dot
+  intro: string; // one line under the name in the sidebar
+  basedIn: string;
+  background: string;
   education: string;
   languages: string[];
   email: string;
   photo: string; // path under /public
   links: Link[];
   stats: Stat[];
-  about: string[]; // paragraphs
+  story: string[]; // paragraphs
 }
 
-export interface Experience {
-  company: string;
-  location: string;
-  role: string;
-  start: string; // e.g. "Jul 2025"
-  end: string; // "Present" for current role
-  highlights: string[];
+export interface Principle {
+  title: string;
+  body: string;
 }
 
 export type ProjectStatus =
@@ -65,12 +63,17 @@ export interface ProductFeature {
 }
 
 export interface Screenshot {
-  file: string; // file name inside /public/projects/, e.g. "tapvoice-2.png"
+  file: string; // file name inside /public/projects/, e.g. "tapvoice-2.webp"
   alt: string;
 }
 
+/** Palette colours defined in app/globals.css (both themes). */
+export type Hue = "emerald" | "cyan" | "violet" | "amber" | "rose" | "sky";
+export const hues: Hue[] = ["emerald", "cyan", "violet", "amber", "rose", "sky"];
+
 export interface Project {
-  slug: string; // image lives at /public/projects/<slug>.png
+  color?: Hue; // card colour; defaults to emerald
+  slug: string; // fallback image lives at /public/projects/<slug>.webp
   screenshots?: Screenshot[]; // opens in the full-screen viewer; 2+ adds arrows. Missing files are skipped
   name: string;
   oneLiner: string;
@@ -99,8 +102,7 @@ export interface SkillGroup {
 export interface SiteContent {
   url: string;
   profile: Profile;
-  experience: Experience[];
-  internationalWork?: string;
+  principles: Principle[];
   projects: Project[];
   videos: Video[];
   youtubeChannel?: string;
@@ -120,20 +122,17 @@ export const site: SiteContent = {
 
   profile: {
     name: "Kamlesh Murdhariya",
-    eyebrow: "Senior Backend & Data Engineering Architect",
-    headline:
-      "I build backend and data systems for banks — and ship AI products on my own.",
-    sub: "Nearly 13 years with Java, Spring Boot, Spark and AWS across Crédit Agricole, FirstRand and Morningstar. Tech Lead for SSO and access-control services at Crédit Agricole. Founder and sole engineer of JobMatchApply and TapVoice — both launched on Product Hunt.",
-    badgeLine: "Mumbai · Open to remote and relocation · Immediate joiner",
-    title:
-      "Senior Backend & Data Engineering Architect · Tech Lead at Crédit Agricole, Mumbai",
-    location:
-      "Mumbai, India — open to remote and relocation (visa sponsorship required) · immediate joiner",
-    lookingFor:
-      "Staff/principal engineer, architect or hands-on tech lead roles in backend or data engineering.",
+    role: "Founder-engineer · Mumbai",
+    headline: "I build AI products end to end — idea, code, payments, launch.",
+    headlineAccent: "end to end",
+    sub: "Founder and sole engineer of TapVoice and JobMatchApply, both launched on Product Hunt. Behind them: nearly 13 years building backend and data systems for banks and financial firms.",
+    status: "Building my own startup",
+    intro: "I ship AI products alone, with the engineering discipline of 13 years in banking.",
+    basedIn: "Mumbai, India",
+    background: "Nearly 13 years building backend, data and identity systems in banking and finance",
     education: "Master in Information Technology, University of Mumbai",
     languages: ["English (fluent)", "Hindi (native)"],
-    email: "murdhariya.kamlesh2@gmail.com",
+    email: "murdhariya.kamlesh3@gmail.com",
     photo: "/me.jpg",
     links: [
       {
@@ -146,125 +145,58 @@ export const site: SiteContent = {
       {
         kind: "email",
         label: "Email",
-        href: "mailto:murdhariya.kamlesh2@gmail.com",
+        href: "mailto:murdhariya.kamlesh3@gmail.com",
       },
     ],
     stats: [
-      { value: "13 yrs", label: "in engineering, since 2013" },
-      { value: "7", label: "companies" },
+      { value: "2", label: "Product Hunt launches — TapVoice and JobMatchApply", wide: true },
+      { value: "LIVE_COUNT", label: "live products, built and run solo" },
+      { value: "13 yrs", label: "engineering for banks and finance" },
+      { value: "9,700+", label: "jobs JobMatchApply collects daily from 130+ companies" },
       { value: "6–7", label: "engineers led per team" },
-      { value: "5", label: "live products" },
-      { value: "2", label: "Product Hunt launches" },
     ],
-    about: [
-      "I'm a hands-on backend and data engineering architect. Since December 2013 I've built backend systems, data platforms and identity tools for banking and financial services — Crédit Agricole, FirstRand, Morningstar — plus Accenture and Capgemini earlier on.",
-      "Today I'm Tech Lead at Crédit Agricole, where my team of six builds and runs the internal authentication and authorization tools behind single sign-on for the bank's applications. Before that I led a team of seven as Chief Tech Lead at Remiges Technologies, rebuilding a legacy .NET stock-matching system as Java/Spring Boot microservices, and ran Spark pipelines on AWS for a South African client.",
-      "Outside work, I build AI products end to end — idea, code, payments, launch. JobMatchApply (AI job matching for India) and TapVoice (voice dictation with screen-aware AI replies) are both live and launched on Product Hunt.",
+    story: [
+      "I'm an engineer who builds products end to end, on my own: the idea, the code, the payments and the launch. TapVoice and JobMatchApply are live and launched on Product Hunt, and AdLaunch AI, ReviewsToWebsite and get-youtube-transcripts.io are live too.",
+      "My edge is nearly 13 years of building systems that can't fail. Since 2013 I've built backend platforms, data pipelines and the authentication and single sign-on tools that banks and financial firms run on — and led engineering teams of six and seven along the way.",
+      "That's why my products ship with the unglamorous parts done properly: row-level security, HMAC-verified payment webhooks, end-to-end tests in CI, encrypted backups, LLM cost ceilings and prompt-injection safeguards.",
+      "Now I'm building my own startup. If you're a founder or an investor and want to talk, email me — I reply to every message.",
     ],
   },
 
-  experience: [
+  principles: [
     {
-      company: "Crédit Agricole",
-      location: "Mumbai",
-      role: "Tech Lead",
-      start: "Jul 2025",
-      end: "Present",
-      highlights: [
-        "Lead development, monitoring and maintenance of the bank's internal authentication and authorization tools powering SSO.",
-        "Own feature design and delivery plus production support.",
-        "Mentor 6 engineers; set coding, review and testing standards.",
-        "Brought AI-assisted development into the team within enterprise code-quality controls.",
-      ],
+      title: "End to end, alone",
+      body: "Idea, code, payments, launch and support. No hand-offs, so I move from idea to live product fast.",
     },
     {
-      company: "JMM Infotech",
-      location: "South Africa (remote)",
-      role: "Data Engineer",
-      start: "Jan 2024",
-      end: "Apr 2025",
-      highlights: [
-        "Built and ran Spark pipelines on AWS for analytics and ML.",
-        "Tuned jobs and clusters (partitioning, caching).",
-        "Data-security controls across AWS; data governance and compliance.",
-        "Planned and delegated team work.",
-      ],
+      title: "Bank-grade by default",
+      body: "Row-level security, HMAC-verified webhooks, Playwright tests in CI, nightly encrypted backups with a restore drill.",
     },
     {
-      company: "Remiges Technologies",
-      location: "India",
-      role: "Chief Tech Lead",
-      start: "Mar 2023",
-      end: "Jan 2024",
-      highlights: [
-        "Designed the target architecture for the whole product.",
-        "Rebuilt a legacy .NET stock-matching app as Java/Spring Boot microservices.",
-        "Led 7 engineers across dev, QA and frontend.",
-        "Set up dev/UAT/prod environments; ETL and REST data APIs.",
-      ],
+      title: "Honest AI",
+      body: "JobMatchApply writes cover letters only from your own resume, and an honesty check strips anything that isn't in it.",
     },
     {
-      company: "FirstRand Solutions",
-      location: "India",
-      role: "Data Engineer",
-      start: "Aug 2020",
-      end: "Jul 2022",
-      highlights: [
-        "Big-data ETL pipelines on distributed systems for structured and unstructured banking data.",
-        "Performance tuning and production support.",
-      ],
-    },
-    {
-      company: "Morningstar",
-      location: "India",
-      role: "Big Data Engineer",
-      start: "Jan 2019",
-      end: "Aug 2020",
-      highlights: [
-        "Built a Hadoop cluster from scratch.",
-        "Hive/MapReduce analysis of financial data with custom Hive UDFs.",
-        "Sqoop imports from Oracle; shell automation.",
-      ],
-    },
-    {
-      company: "Accenture",
-      location: "India",
-      role: "Software Developer",
-      start: "Jan 2017",
-      end: "Dec 2018",
-      highlights: [
-        "Java and RTI components, SOAP/REST services, Grafana dashboards, Oracle SQL, JUnit.",
-      ],
-    },
-    {
-      company: "Capgemini",
-      location: "India",
-      role: "Software Developer",
-      start: "Dec 2013",
-      end: "Dec 2016",
-      highlights: [
-        "Java, Liferay and Hibernate modules; specs; server migrations; production fixes.",
-      ],
+      title: "Cost-aware LLMs",
+      body: "Structured outputs, prompt caching (~55% cheaper per call) and per-plan cost ceilings, so usage can't run away.",
     },
   ],
-
-  // TODO_INTERNATIONAL_WORK: uncomment only after you approve the wording.
-  // internationalWork: "Onsite in Łódź, Poland (Commerzbank, 2022) and South Africa (2024).",
 
   projects: [
     {
       slug: "tapvoice",
+      color: "emerald",
       screenshots: [
         {
-          file: "tapvoice.png",
+          file: "tapvoice.webp",
           alt: "TapVoice settings: F8 and F9 hotkeys, Groq or Claude as the F9 answer provider, and model choice",
         },
         {
-          file: "tapvoice-2.png",
+          file: "tapvoice-2.webp",
           alt: "TapVoice settings: smart formatting, editing commands and recording indicator toggles",
         },
         {
-          file: "tapvoice-3.png",
+          file: "tapvoice-3.webp",
           alt: "TapVoice dashboard with weekly counts, the F8 transcripts list and F9 chat history",
         },
       ],
@@ -314,21 +246,22 @@ export const site: SiteContent = {
     },
     {
       slug: "jobmatchapply",
+      color: "cyan",
       screenshots: [
         {
-          file: "jobmatchapply.png",
+          file: "jobmatchapply.webp",
           alt: "JobMatchApply home page: search for remote jobs or jobs abroad with visa sponsorship, with an example fit score of 78/100",
         },
         {
-          file: "jobmatchapply-2.png",
+          file: "jobmatchapply-2.webp",
           alt: "JobMatchApply Find jobs page filtered to roles open to India, with filters for remote scope, seniority, experience and skills",
         },
         {
-          file: "jobmatchapply-3.png",
+          file: "jobmatchapply-3.webp",
           alt: "JobMatchApply Find jobs page with the visa-sponsored filter on, showing roles abroad that offer sponsorship",
         },
         {
-          file: "jobmatchapply-4.png",
+          file: "jobmatchapply-4.webp",
           alt: "JobMatchApply job page: role description with highlighted skills, an 'Is it worth applying?' score panel and Apply Assist",
         },
       ],
@@ -368,14 +301,94 @@ export const site: SiteContent = {
       ],
     },
     {
-      slug: "adlaunch-ai",
+      slug: "reviewstowebsite",
+      color: "amber",
       screenshots: [
         {
-          file: "adlaunch-ai.png",
+          file: "reviewstowebsite.webp",
+          alt: "ReviewsToWebsites landing page: paste a Google Maps link and get a website built from your reviews in about 60 seconds",
+        },
+        {
+          file: "reviewstowebsite-2.webp",
+          alt: "ReviewToWebsite home page: 'Turn Google Reviews into a Website in 60 Seconds' with a Google Maps link field and Generate Free Website button",
+        },
+      ],
+      name: "ReviewsToWebsite",
+      oneLiner:
+        "Paste a Google Maps link and get a website built from your customer reviews in about 60 seconds. Free, no account needed.",
+      statuses: ["Live"],
+      tags: ["Live", "AI"],
+      stack: [],
+      links: [{ kind: "site", label: "Live", href: "https://reviewstowebsites.com" }],
+    },
+    {
+      slug: "get-youtube-transcripts",
+      color: "rose",
+      screenshots: [
+        {
+          file: "get-youtube-transcripts.webp",
+          alt: "TranscriptX features: fast extraction, free use, AI summaries, any YouTube video, TXT/SRT/VTT/JSON export, clean output",
+        },
+      ],
+      name: "get-youtube-transcripts.io",
+      oneLiner: "Transcript extraction for single videos and whole channels.",
+      statuses: ["Live"],
+      tags: ["Live", "Tools"],
+      stack: [],
+      links: [
+        { kind: "site", label: "Live", href: "https://get-youtube-transcripts.io/" },
+      ],
+    },
+    {
+      slug: "speakit",
+      color: "emerald",
+      screenshots: [
+        {
+          file: "speakit.webp",
+          alt: "Speak It: the app's record screen. Just tap and talk, no typing needed",
+        },
+        {
+          file: "speakit-2.webp",
+          alt: "Perfect It: AI turns the original recording into three polished versions, such as Professional and Casual",
+        },
+        {
+          file: "speakit-3.webp",
+          alt: "Share It: copy, share or save any version in one tap",
+        },
+        {
+          file: "speakit-4.webp",
+          alt: "Save as Note: the Notes screen with saved ideas grouped by day",
+        },
+        {
+          file: "speakit-5.webp",
+          alt: "Make It Yours: settings to pick the language and customise the AI rewrite prompts",
+        },
+        {
+          file: "speakit-6.webp",
+          alt: "Never Lose a Thought: the History screen, where every recording is auto-saved and searchable",
+        },
+      ],
+      name: "SpeakIt / VoiceIt",
+      oneLiner:
+        "AI voice-to-polished-text mobile app with fully configurable tones, plus a web version.",
+      statuses: ["Shipped"],
+      tags: ["AI", "Open source"],
+      stack: ["React Native", "Expo", "TypeScript"],
+      links: [
+        { kind: "github", label: "Mobile", href: `${GITHUB}/VoiceUI` },
+        { kind: "github", label: "Web", href: `${GITHUB}/VoiceIt_Web` },
+      ],
+    },
+    {
+      slug: "adlaunch-ai",
+      color: "violet",
+      screenshots: [
+        {
+          file: "adlaunch-ai.webp",
           alt: "AdLaunch AI landing page: find the Facebook and Instagram ads competitors already spend on and generate new concepts from them",
         },
         {
-          file: "adlaunch-ai-2.png",
+          file: "adlaunch-ai-2.webp",
           alt: "AdLaunch AI 4-step pipeline: brand context, find competitors, what is working (Claude analysis), create ads",
         },
       ],
@@ -391,51 +404,15 @@ export const site: SiteContent = {
       ],
     },
     {
-      slug: "reviewstowebsite",
-      screenshots: [
-        {
-          file: "reviewstowebsite.png",
-          alt: "ReviewsToWebsites landing page: paste a Google Maps link and get a website built from your reviews in about 60 seconds",
-        },
-        {
-          file: "reviewstowebsite-2.png",
-          alt: "ReviewToWebsite home page: 'Turn Google Reviews into a Website in 60 Seconds' with a Google Maps link field and Generate Free Website button",
-        },
-      ],
-      name: "ReviewsToWebsite",
-      oneLiner:
-        "Paste a Google Maps link and get a website built from your customer reviews in about 60 seconds. Free, no account needed.",
-      statuses: ["Live"],
-      tags: ["Live", "AI"],
-      stack: [],
-      links: [{ kind: "site", label: "Live", href: "https://reviewstowebsites.com" }],
-    },
-    {
-      slug: "get-youtube-transcripts",
-      screenshots: [
-        {
-          file: "get-youtube-transcripts.png",
-          alt: "TranscriptX features: fast extraction, free use, AI summaries, any YouTube video, TXT/SRT/VTT/JSON export, clean output",
-        },
-      ],
-      name: "get-youtube-transcripts.io",
-      oneLiner: "Transcript extraction for single videos and whole channels.",
-      statuses: ["Live"],
-      tags: ["Live", "Tools"],
-      stack: [],
-      links: [
-        { kind: "site", label: "Live", href: "https://get-youtube-transcripts.io/" },
-      ],
-    },
-    {
       slug: "funeral-accounting",
+      color: "sky",
       screenshots: [
         {
-          file: "funeral-accounting.png",
+          file: "funeral-accounting.webp",
           alt: "Funeral Accounting dashboard with demo data: monthly payment grid per member, arrears status and fund balance",
         },
         {
-          file: "funeral-accounting-2.png",
+          file: "funeral-accounting-2.webp",
           alt: "Funeral Accounting payments page with demo data: record a payment and the recent payments list",
         },
       ],
@@ -452,17 +429,18 @@ export const site: SiteContent = {
     },
     {
       slug: "inviteapp",
+      color: "amber",
       screenshots: [
         {
-          file: "inviteapp.png",
+          file: "inviteapp.webp",
           alt: "InviteApp home page: digital invitations for Indian weddings and celebrations, shared as one WhatsApp-ready link",
         },
         {
-          file: "inviteapp-2.png",
+          file: "inviteapp-2.webp",
           alt: "InviteApp 8-step builder, step 1: pick the event type, with a live phone preview of the invitation",
         },
         {
-          file: "inviteapp-3.png",
+          file: "inviteapp-3.webp",
           alt: "InviteApp template gallery: free and premium designs such as Marigold & Mango Leaf and Royal Maroon Gold",
         },
       ],
@@ -472,45 +450,6 @@ export const site: SiteContent = {
       tags: ["Tools"],
       stack: ["Next.js", "Supabase", "Razorpay"],
       links: [],
-    },
-    {
-      slug: "speakit",
-      screenshots: [
-        {
-          file: "speakit.png",
-          alt: "Speak It: the app's record screen. Just tap and talk, no typing needed",
-        },
-        {
-          file: "speakit-2.png",
-          alt: "Perfect It: AI turns the original recording into three polished versions, such as Professional and Casual",
-        },
-        {
-          file: "speakit-3.png",
-          alt: "Share It: copy, share or save any version in one tap",
-        },
-        {
-          file: "speakit-4.png",
-          alt: "Save as Note: the Notes screen with saved ideas grouped by day",
-        },
-        {
-          file: "speakit-5.png",
-          alt: "Make It Yours: settings to pick the language and customise the AI rewrite prompts",
-        },
-        {
-          file: "speakit-6.png",
-          alt: "Never Lose a Thought: the History screen, where every recording is auto-saved and searchable",
-        },
-      ],
-      name: "SpeakIt / VoiceIt",
-      oneLiner:
-        "AI voice-to-polished-text mobile app with fully configurable tones, plus a web version.",
-      statuses: ["Shipped"],
-      tags: ["AI", "Open source"],
-      stack: ["React Native", "Expo", "TypeScript"],
-      links: [
-        { kind: "github", label: "Mobile", href: `${GITHUB}/VoiceUI` },
-        { kind: "github", label: "Web", href: `${GITHUB}/VoiceIt_Web` },
-      ],
     },
     // TODO_ONE_LINER + TODO_URL: LocalRank.in stays hidden until you add both.
     // {
@@ -614,38 +553,43 @@ export const site: SiteContent = {
 };
 
 export const nav = [
-  { href: "#about", label: "About" },
   { href: "#products", label: "Products" },
-  { href: "#projects", label: "Projects" },
-  { href: "#videos", label: "Videos" },
+  { href: "#principles", label: "How I build" },
+  { href: "#story", label: "Story" },
+  { href: "#demos", label: "Demos" },
   { href: "#contact", label: "Contact" },
 ] as const;
 
 // Small UI strings, kept here so components contain no copy.
 export const ui = {
-  ctaProducts: "See my products",
+  ctaProducts: "See what I've shipped",
+  ctaEmail: "Email me",
   themeToggle: "Toggle dark mode",
   skipLink: "Skip to content",
+  navLabel: "Sections",
   sections: {
-    about: "About",
-    experience: "Experience",
-    products: "Featured products",
-    projects: "More projects",
-    videos: "Videos",
-    skills: "Skills & stack",
+    glance: "At a glance",
+    products: "Products",
+    moreProducts: "More I've built",
+    principles: "How I build",
+    story: "Story",
+    demos: "Demos",
+    skills: "Stack",
     contact: "Contact",
   },
-  contactLead: "Email or LinkedIn is the fastest way to reach me.",
+  contactTitle: "Building something? Let's talk.",
+  contactLead: "Founders, investors, or anyone curious about what I'm building — email is the fastest way to reach me.",
   filterAll: "All",
   filterLabel: "Filter projects by tag",
   playVideo: "Play video",
-  lookingFor: "Looking for",
+  basedIn: "Based in",
+  background: "Background",
   education: "Education",
   languages: "Languages",
-  internationalWork: "International work",
   demoVideos: "Demo videos",
   youtubeChannel: "YouTube channel",
   role: "Role",
+  engineeringDetails: "Engineering details",
   noImage: "Screenshot coming soon",
   gallery: {
     previous: "Previous screenshot",
@@ -660,3 +604,7 @@ export const ui = {
     hint: "Click to zoom · ← → to browse · Esc to close",
   },
 } as const;
+
+// Keep the "live products" stat in sync with the project list.
+const liveStat = site.profile.stats.find((s) => s.value === "LIVE_COUNT");
+if (liveStat) liveStat.value = String(site.projects.filter((p) => p.statuses.includes("Live")).length);

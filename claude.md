@@ -64,7 +64,7 @@ Audiences (in priority order):
   - LinkedIn: https://www.linkedin.com/in/kamlesh-murdhariya-833b71124/
   - GitHub: https://github.com/kmurdhar3 (also https://github.com/kmurdhar)
   - X: https://x.com/kmurdhar
-  - Email: murdhariya.kamlesh2@gmail.com
+  - Email: murdhariya.kamlesh3@gmail.com
   - Phone: do NOT show on the site (spam). Email + LinkedIn only.
 
 ### About (draft)

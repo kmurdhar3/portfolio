@@ -8,6 +8,14 @@
   --accent-contrast: #ffffff;
   --ph: #b4441f;
 
+  /* Palette: one colour per product / tile. Light shades are dark enough for AA text. */
+  --emerald: #15803d;
+  --cyan: #0e7490;
+  --violet: #7c3aed;
+  --amber: #b45309;
+  --rose: #be123c;
+  --sky: #0369a1;
+
   --bg: #fafaf8;
   --surface: #ffffff;
   --surface-2: #f2f2ee;
@@ -24,6 +32,12 @@
     --accent-soft: #10291a;
     --accent-contrast: #0b0c0b;
     --ph: #ff8a63;
+    --emerald: #4ade80;
+    --cyan: #67e8f9;
+    --violet: #c4b5fd;
+    --amber: #fbbf24;
+    --rose: #fda4af;
+    --sky: #7dd3fc;
     --bg: #0b0c0b;
     --surface: #131512;
     --surface-2: #1b1d1a;
@@ -40,6 +54,12 @@
   --accent-soft: #10291a;
   --accent-contrast: #0b0c0b;
   --ph: #ff8a63;
+  --emerald: #4ade80;
+  --cyan: #67e8f9;
+  --violet: #c4b5fd;
+  --amber: #fbbf24;
+  --rose: #fda4af;
+  --sky: #7dd3fc;
   --bg: #0b0c0b;
   --surface: #131512;
   --surface-2: #1b1d1a;
@@ -61,8 +81,15 @@
   --color-accent-soft: var(--accent-soft);
   --color-accent-contrast: var(--accent-contrast);
   --color-ph: var(--ph);
+  --color-emerald: var(--emerald);
+  --color-cyan: var(--cyan);
+  --color-violet: var(--violet);
+  --color-amber: var(--amber);
+  --color-rose: var(--rose);
+  --color-sky: var(--sky);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-instrument-serif);
 }
 
 html {
@@ -107,5 +134,119 @@ body {
     &:where(:root:not([data-theme="light"]) *) {
       @slot;
     }
+  }
+}
+
+/* ---------- Page atmosphere ---------- */
+
+/* Faint grid fading out from the top, plus a soft accent glow. Fixed, behind everything. */
+.page-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(42rem 30rem at 0% -5%, color-mix(in oklab, var(--emerald) 20%, transparent), transparent 70%),
+    radial-gradient(40rem 28rem at 100% 0%, color-mix(in oklab, var(--violet) 18%, transparent), transparent 70%),
+    radial-gradient(36rem 26rem at 55% 105%, color-mix(in oklab, var(--amber) 14%, transparent), transparent 70%),
+    radial-gradient(34rem 24rem at 0% 100%, color-mix(in oklab, var(--cyan) 14%, transparent), transparent 70%),
+    radial-gradient(30rem 22rem at 100% 70%, color-mix(in oklab, var(--rose) 12%, transparent), transparent 70%);
+}
+.page-backdrop::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, color-mix(in oklab, var(--fg) 6%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--fg) 6%, transparent) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse 80% 60% at 30% 0%, #000 30%, transparent 75%);
+}
+
+/* Cursor spotlight (position set by components/Spotlight.tsx). */
+.spotlight {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(
+    560px circle at var(--mx, -999px) var(--my, -999px),
+    color-mix(in oklab, var(--violet) 10%, transparent),
+    transparent 70%
+  );
+}
+
+@layer components {
+  /* Cards: subtle lift and accent edge on hover. */
+  .card {
+    border: 1px solid var(--border);
+    background: color-mix(in oklab, var(--surface) 82%, transparent);
+    backdrop-filter: blur(6px);
+    transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .card:hover {
+    border-color: color-mix(in oklab, var(--c, var(--accent)) 55%, var(--border));
+    box-shadow: 0 14px 44px -18px color-mix(in oklab, var(--c, var(--accent)) 55%, transparent);
+  }
+
+  /* Soft wash of the card's own colour (--c). */
+  .tint {
+    background: linear-gradient(
+      150deg,
+      color-mix(in oklab, var(--c) 16%, var(--surface)) 0%,
+      color-mix(in oklab, var(--c) 5%, var(--surface)) 100%
+    );
+  }
+
+  /* Multicolour text for headline accents. */
+  .text-gradient {
+    background: linear-gradient(90deg, var(--emerald), var(--cyan) 45%, var(--violet));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Thin multicolour rule used on section labels and the active nav item. */
+  .rainbow {
+    background: linear-gradient(90deg, var(--emerald), var(--cyan), var(--violet), var(--rose), var(--amber));
+  }
+}
+
+/* Scroll-in reveal, CSS only. Browsers without scroll timelines just show content. */
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .reveal {
+      animation: reveal ease-out both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 35%;
+    }
+  }
+}
+
+/* Live status dot pulse. */
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--accent) 55%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 8px transparent;
+  }
+}
+.live-dot {
+  animation: pulse-ring 1.8s ease-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .live-dot {
+    animation: none;
   }
 }

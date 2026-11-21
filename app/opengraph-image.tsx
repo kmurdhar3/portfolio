@@ -4,7 +4,7 @@ import { cacheLife } from "next/cache";
 import { ImageResponse } from "next/og";
 import { site } from "@/content/site";
 
-export const alt = `${site.profile.name} — ${site.profile.eyebrow}`;
+export const alt = `${site.profile.name} — ${site.profile.role}`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -42,7 +42,7 @@ export default async function OpengraphImage() {
               color: "#4ade80",
             }}
           >
-            {profile.eyebrow}
+            {profile.role}
           </div>
           <div style={{ display: "flex", fontSize: 68, fontWeight: 700, marginTop: 28, lineHeight: 1.05 }}>
             {profile.name}
@@ -51,7 +51,7 @@ export default async function OpengraphImage() {
             {profile.headline}
           </div>
           <div style={{ display: "flex", marginTop: "auto", fontSize: 22, color: "#a3a59c" }}>
-            {profile.badgeLine}
+            {profile.status}
           </div>
         </div>
         {/* eslint-disable-next-line @next/next/no-img-element -- ImageResponse needs a plain img */}

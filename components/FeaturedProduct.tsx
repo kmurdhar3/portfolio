@@ -1,10 +1,9 @@
 import type { Project } from "@/content/site";
 import { site, ui } from "@/content/site";
 import { ProductHuntIcon } from "./Icons";
-import { LiteYouTube } from "./LiteYouTube";
 import { ProjectGallery } from "./ProjectGallery";
 import { ProjectImage, hasProjectFile, hasProjectImage } from "./ProjectImage";
-import { Chip, ExternalLink, StatusBadge } from "./ui";
+import { Chip, ExternalLink, StatusBadge, hueStyle } from "./ui";
 
 function ProductHuntBadge({ href, name }: { href: string; name: string }) {
   return (
@@ -24,88 +23,71 @@ function ProductHuntBadge({ href, name }: { href: string; name: string }) {
   );
 }
 
-function FeaturedCard({ project, index }: { project: Project; index: number }) {
+/** Large product tile: screenshots first, then the pitch, then depth on demand. */
+function FeaturedCard({ project }: { project: Project }) {
   const ph = project.links.find((l) => l.kind === "producthunt");
   const otherLinks = project.links.filter((l) => l.kind !== "producthunt");
-  const videos = project.videoIds ?? [];
-  const videoTitles = new Map(site.videos.map((v) => [v.id, `${v.title} — ${v.caption}`]));
   const slides = (project.screenshots ?? [])
     .filter((s) => hasProjectFile(s.file))
     .map((s) => ({ src: `/projects/${s.file}`, alt: s.alt }));
-  const imageSizes = "(min-width: 1024px) 576px, 100vw";
-  const imageClass = "lg:aspect-auto lg:h-full lg:border-r lg:border-b-0";
+  const imageSizes = "(min-width: 1280px) 1200px, (min-width: 1024px) 70vw, 100vw";
 
   return (
     <article
       aria-labelledby={`${project.slug}-name`}
-      className="overflow-hidden rounded-2xl border border-line bg-surface"
+      style={hueStyle(project.color)}
+      className="card tint reveal overflow-hidden rounded-3xl"
     >
-      <div className="grid lg:grid-cols-2">
-        {slides.length > 0 ? (
-          <ProjectGallery
-            slides={slides}
-            name={project.name}
-            sizes={imageSizes}
-            labels={ui.gallery}
-            preload={index === 0}
-            className={imageClass}
-          />
-        ) : (
-          <ProjectImage
-            slug={project.slug}
-            name={project.name}
-            hasImage={hasProjectImage(project.slug)}
-            sizes={imageSizes}
-            preload={index === 0}
-            className={imageClass}
-          />
-        )}
-        <div className="p-6 sm:p-8">
-          <div className="flex flex-wrap gap-2">
-            {project.statuses.map((s) => (
-              <StatusBadge key={s} status={s} />
-            ))}
-          </div>
-          <h3 id={`${project.slug}-name`} className="mt-4 text-3xl font-semibold tracking-tight">
-            {project.name}
-          </h3>
-          <p className="mt-3 text-lg leading-relaxed text-pretty text-muted">{project.oneLiner}</p>
-          {project.role && (
-            <p className="mt-3 font-mono text-xs text-muted">
-              {ui.role}: {project.role}
-            </p>
-          )}
-          <div className="mt-6 flex flex-wrap items-center gap-3">
-            {otherLinks.map((l, i) => (
-              <ExternalLink key={l.href} link={l} variant={i === 0 ? "primary" : "ghost"} />
-            ))}
-            {ph && <ProductHuntBadge href={ph.href} name={project.name} />}
-          </div>
-        </div>
-      </div>
+      <div className="h-1.5 bg-[var(--c)]" aria-hidden="true" />
+      {slides.length > 0 ? (
+        <ProjectGallery
+          slides={slides}
+          name={project.name}
+          sizes={imageSizes}
+          labels={ui.gallery}
+        />
+      ) : (
+        <ProjectImage
+          slug={project.slug}
+          name={project.name}
+          hasImage={hasProjectImage(project.slug)}
+          sizes={imageSizes}
+        />
+      )}
 
-      <div className="border-t border-line p-6 sm:p-8">
+      <div className="p-6 sm:p-8">
+        <div className="flex flex-wrap gap-2">
+          {project.statuses.map((s) => (
+            <StatusBadge key={s} status={s} />
+          ))}
+        </div>
+        <h3 id={`${project.slug}-name`} className="mt-4 font-display text-5xl leading-none tracking-tight text-[var(--c)]">
+          {project.name}
+        </h3>
+        <p className="mt-4 text-lg leading-relaxed text-pretty text-muted">{project.oneLiner}</p>
+        {project.role && <p className="mt-3 font-mono text-xs text-muted">{project.role}</p>}
+
+        <div className="mt-6 flex flex-wrap items-center gap-3">
+          {otherLinks.map((l, i) => (
+            <ExternalLink key={l.href} link={l} variant={i === 0 ? "hue" : "ghost"} />
+          ))}
+          {ph && <ProductHuntBadge href={ph.href} name={project.name} />}
+        </div>
+
         {project.features && (
-          <ul className="grid gap-4 sm:grid-cols-3">
+          <ul className="mt-8 grid gap-3 sm:grid-cols-3">
             {project.features.map((f) => (
-              <li key={f.title} className="rounded-xl border border-line bg-surface-2 p-4">
-                <p className="font-mono text-sm font-semibold text-accent">{f.title}</p>
+              <li
+                key={f.title}
+                className="rounded-xl border border-[color-mix(in_oklab,var(--c)_35%,var(--border))] bg-surface/70 p-4"
+              >
+                <p className="font-mono text-sm font-semibold text-[var(--c)]">{f.title}</p>
                 <p className="mt-2 text-sm leading-relaxed">{f.body}</p>
               </li>
             ))}
           </ul>
         )}
-        {project.details && (
-          <ul
-            className={`list-disc space-y-2 pl-5 text-[15px] leading-relaxed marker:text-accent ${
-              project.features ? "mt-6" : ""
-            }`}
-          >
-            {project.details.map((d) => (
-              <li key={d}>{d}</li>
-            ))}
-          </ul>
-        )}
+
         <ul className="mt-6 flex flex-wrap gap-1.5" aria-label={`${project.name} stack`}>
           {project.stack.map((s) => (
             <li key={s}>
@@ -113,20 +95,24 @@ function FeaturedCard({ project, index }: { project: Project; index: number }) {
             </li>
           ))}
         </ul>
-        {videos.length > 0 && (
-          <div className="mt-8">
-            <h4 className="font-mono text-xs tracking-wider text-muted uppercase">{ui.demoVideos}</h4>
-            <div className="mt-3 grid gap-4 sm:grid-cols-2">
-              {videos.map((id) => (
-                <LiteYouTube
-                  key={id}
-                  id={id}
-                  title={videoTitles.get(id) ?? project.name}
-                  playLabel={ui.playVideo}
-                />
+
+        {project.details && project.details.length > 0 && (
+          <details className="group mt-6 rounded-xl border border-line bg-surface-2/50 open:bg-surface-2/80">
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-4 py-3 text-sm font-medium [&::-webkit-details-marker]:hidden">
+              {ui.engineeringDetails}
+              <span
+                aria-hidden="true"
+                className="font-mono text-[var(--c)] transition-transform duration-200 group-open:rotate-45"
+              >
+                +
+              </span>
+            </summary>
+            <ul className="list-disc space-y-2 px-4 pb-4 pl-9 text-[15px] leading-relaxed marker:text-[var(--c)]">
+              {project.details.map((d) => (
+                <li key={d}>{d}</li>
               ))}
-            </div>
-          </div>
+            </ul>
+          </details>
         )}
       </div>
     </article>
@@ -136,9 +122,9 @@ function FeaturedCard({ project, index }: { project: Project; index: number }) {
 export function FeaturedProducts() {
   const featured = site.projects.filter((p) => p.featured);
   return (
-    <div className="space-y-10">
-      {featured.map((p, i) => (
-        <FeaturedCard key={p.slug} project={p} index={i} />
+    <div className="grid gap-8 min-[1800px]:grid-cols-2">
+      {featured.map((p) => (
+        <FeaturedCard key={p.slug} project={p} />
       ))}
     </div>
   );

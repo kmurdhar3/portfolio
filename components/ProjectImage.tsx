@@ -8,14 +8,14 @@ export function hasProjectFile(file: string) {
   return existsSync(path.join(process.cwd(), "public", "projects", file));
 }
 
-/** True if public/projects/<slug>.png exists at build time. */
+/** True if public/projects/<slug>.webp exists at build time. */
 export function hasProjectImage(slug: string) {
-  return hasProjectFile(`${slug}.png`);
+  return hasProjectFile(`${slug}.webp`);
 }
 
 /**
  * Screenshot for a project, or a lettered placeholder until a real image is dropped
- * into public/projects/<slug>.png. Server component — the check runs at build time.
+ * into public/projects/<slug>.webp. Server component — the check runs at build time.
  */
 export function ProjectImage({
   slug,
@@ -38,7 +38,7 @@ export function ProjectImage({
     >
       {hasImage ? (
         <Image
-          src={`/projects/${slug}.png`}
+          src={`/projects/${slug}.webp`}
           alt={`Screenshot of ${name}`}
           fill
           sizes={sizes}

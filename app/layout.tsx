@@ -1,12 +1,14 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
 import { site } from "@/content/site";
 import { themeInitScript } from "@/components/ThemeToggle";
 import "./globals.css";
 
+// latin-ext too: it carries "₹" (JobMatchApply pricing). Preloading it avoids a late
+// font load that would repaint the headline and slow down mobile LCP.
 const geistSans = Geist({
   variable: "--font-geist-sans",
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
 });
 
 const geistMono = Geist_Mono({
@@ -14,9 +16,18 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+// Display serif for headline accents and big numbers. Upright only: a single preloaded file,
+// so the headline isn't held back waiting for a late-discovered italic font.
+const instrumentSerif = Instrument_Serif({
+  variable: "--font-instrument-serif",
+  subsets: ["latin"],
+  weight: "400",
+  style: "normal",
+});
+
 const { profile } = site;
-const title = `${profile.name} — ${profile.eyebrow}`;
-const description = `${profile.headline} ${profile.badgeLine}.`;
+const title = `${profile.name} — Founder-engineer`;
+const description = `${profile.headline} ${profile.sub}`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -52,7 +63,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable} antialiased`}
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />

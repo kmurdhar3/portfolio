@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { KeyboardEvent, PointerEvent } from "react";
 import { GalleryLightbox } from "./GalleryLightbox";
 
@@ -66,9 +66,41 @@ export function ProjectGallery({
   const [viewerOpen, setViewerOpen] = useState(false);
   const swipeStart = useRef<number | null>(null);
   const swiped = useRef(false);
+  const rootRef = useRef<HTMLDivElement>(null);
   const count = slides.length;
 
-  const go = (next: number) => setIndex((next + count) % count);
+  // Images load only once the gallery is close to the viewport (or always, if preloaded),
+  // and only the slides you've reached plus the next one. Keeps the first page load light.
+  const [near, setNear] = useState(preload);
+  const [seen, setSeen] = useState<Set<number>>(() => new Set([0, 1]));
+  useEffect(() => {
+    if (near) return;
+    const el = rootRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          setNear(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin: "300px 0px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [near]);
+
+  const go = (next: number) => {
+    const i = (next + count) % count;
+    setIndex(i);
+    setSeen((prev) => {
+      const nextSeen = new Set(prev);
+      nextSeen.add(i);
+      nextSeen.add((i + 1) % count);
+      nextSeen.add((i - 1 + count) % count);
+      return nextSeen;
+    });
+  };
 
   const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     if (e.key === "ArrowLeft") {
@@ -106,6 +138,7 @@ export function ProjectGallery({
 
   return (
     <div
+      ref={rootRef}
       role="group"
       aria-roledescription="carousel"
       aria-label={`${name} ${labels.slide.toLowerCase()}s`}
@@ -126,15 +159,19 @@ export function ProjectGallery({
             i === index ? "opacity-100" : "pointer-events-none opacity-0"
           }`}
         >
-          <Image
-            src={s.src}
-            alt={s.alt}
-            fill
-            sizes={sizes}
-            preload={preload && i === 0}
-            draggable={false}
-            className="object-cover object-top select-none"
-          />
+          {near && seen.has(i) ? (
+            <Image
+              src={s.src}
+              alt={s.alt}
+              fill
+              sizes={sizes}
+              preload={preload && i === 0}
+              draggable={false}
+              className="object-cover object-top select-none"
+            />
+          ) : (
+            <span role="img" aria-label={s.alt} className="block h-full w-full" />
+          )}
         </div>
       ))}
 
@@ -179,7 +216,7 @@ export function ProjectGallery({
               <button
                 key={s.src}
                 type="button"
-                onClick={() => setIndex(i)}
+                onClick={() => go(i)}
                 aria-label={`${labels.show} ${i + 1} ${labels.of} ${count}`}
                 aria-current={i === index}
                 className="group inline-flex h-6 w-5 items-center justify-center"
@@ -204,7 +241,7 @@ export function ProjectGallery({
         name={name}
         labels={labels}
         index={index}
-        onIndexChange={setIndex}
+        onIndexChange={go}
         open={viewerOpen}
         onClose={() => setViewerOpen(false)}
       />

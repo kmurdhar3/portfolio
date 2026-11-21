@@ -117,8 +117,8 @@ export interface SiteContent {
 const GITHUB = "https://github.com/kmurdhar3";
 
 export const site: SiteContent = {
-  // TODO_SITE_URL: replace with the final domain once deployed (used for SEO, OG, sitemap).
-  url: "https://kamlesh-murdhariya.vercel.app",
+  // Live site address (used for SEO, Open Graph, sitemap). Change this if you add a custom domain.
+  url: "https://portfolio-3oef.vercel.app",
 
   profile: {
     name: "Kamlesh Murdhariya",

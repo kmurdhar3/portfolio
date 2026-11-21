@@ -108,7 +108,7 @@ const GITHUB = "https://github.com/kmurdhar3";
 
 export const site: SiteContent = {
   // Live site address (used for SEO, Open Graph, sitemap). Change this if you add a custom domain.
-  url: "https://portfolio-3oef.vercel.app",
+  url: "https://kamlesh-kmurdhar.vercel.app",
 
   profile: {
     name: "Kamlesh Murdhariya",
